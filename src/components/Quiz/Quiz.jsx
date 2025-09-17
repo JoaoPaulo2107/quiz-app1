@@ -2,6 +2,7 @@ import React, { useState, useRef } from "react";
 import './Quiz.css';
 import { data } from "../data";
 
+
 const Quiz = () => {
   let [index, setIndex] = useState(0);
   let [question, setQuestion] = useState(data[0]);
@@ -34,7 +35,7 @@ const Quiz = () => {
     if (lock === true) {
       if (index === data.length - 1) {
         setResult(true);
-        return;
+        return 0;
       }
       setIndex(prev => prev + 1);
       setQuestion(data[index + 1]);
@@ -43,19 +44,24 @@ const Quiz = () => {
         option.current.classList.remove("wrong");
         option.current.classList.remove("correct");
         return null;
-      });
+      })
     }
-  };
+  }
+
+  const reset = () =>{
+    setIndex(0);
+    setQuestion(data[0]);
+    setScore(0);
+    setLock(false);
+    setResult(false);
+  }
 
   return (
     <div className="container">
       <h1>Quiz App</h1>
       <hr />
-      {result ? (
-        <h2>Você acertou {score} de {data.length} perguntas!</h2>
-      ) : (
-        <>
-          <h2>{index + 1}. {question.question}</h2>
+      {result?<></>:<> <h2>{index + 1}. {question.question}</h2>
+      
           <ul>
             <li ref={Option1} onClick={(e) => { checkAns(e, 1) }}>{question.option1}</li>
             <li ref={Option2} onClick={(e) => { checkAns(e, 2) }}>{question.option2}</li>
@@ -64,10 +70,17 @@ const Quiz = () => {
           </ul>
           <button onClick={next}>Next</button>
           <div className="index">{index + 1} de {data.length} perguntas</div>
-        </>
-      )}
-    </div>
-  );
-};
+          </>}
+          {result?<>
+            <h2>Você marcou {score} out of {data.length}</h2>
+          <button onClick={reset}>Reset</button>
+          </>:<></>}
 
-export default Quiz;
+     </div>
+  );
+}
+
+export default Quiz
+
+
+
